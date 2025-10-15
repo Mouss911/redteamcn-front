@@ -1,14 +1,28 @@
 import { Link } from "react-router-dom";
-import { FiSearch, FiGithub, FiMoon, FiSun } from "react-icons/fi";
+import { FiSearch, FiMoon, FiSun, FiPlus } from "react-icons/fi";
 import { useState } from "react";
 import { AuthModal } from "./AuthModal";
+import { useTheme } from "../contexts/ThemeContext";
+import { useAuth } from "../contexts/AuthContext";
+import { Button } from "./ui/button";
 
 export function Header() {
-  const [isDark, setIsDark] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const { isAuthenticated, hasRole, logout } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
+  const handleCreateComponent = () => {
+    if (hasRole("coach")) {
+      window.location.href = "/coach-dashboard";
+    } else if (hasRole("developer")) {
+      window.location.href = "/developer-dashboard";
+    } else {
+      window.location.href = "/";
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-50 w-full flex justify-center items-center bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-white">
+    <header className="sticky top-0 z-50 w-full flex justify-center items-center bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <div className="container flex h-14 items-center">
         {/* Logo */}
         <div className="mr-4 flex">
@@ -84,20 +98,41 @@ export function Header() {
 
           {/* Theme toggle */}
           <button
-            onClick={() => setIsDark(!isDark)}
+            onClick={toggleTheme}
             className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 py-2 w-9 px-0"
           >
-            {isDark ? <FiSun className="h-4 w-4" /> : <FiMoon className="h-4 w-4" />}
+            {theme === "dark" ? <FiSun className="h-4 w-4" /> : <FiMoon className="h-4 w-4" />}
             <span className="sr-only">Toggle theme</span>
           </button>
 
-          {/* Login Button */}
-          <button
-            onClick={() => setIsAuthModalOpen(true)}
-            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
-          >
-            Login
-          </button>
+          {/* Create Component Button - Only for authenticated users */}
+          {isAuthenticated && (
+            <Button
+              onClick={handleCreateComponent}
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+            >
+              <FiPlus className="mr-2 h-4 w-4" />
+              Créer composant
+            </Button>
+          )}
+
+          {/* Login/Logout Button */}
+          {isAuthenticated ? (
+            <Button
+              onClick={logout}
+              variant="outline"
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2"
+            >
+              Déconnexion
+            </Button>
+          ) : (
+            <button
+              onClick={() => setIsAuthModalOpen(true)}
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+            >
+              Login
+            </button>
+          )}
         </div>
       </div>
 

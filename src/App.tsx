@@ -6,6 +6,13 @@ import { BlocksPage } from "./pages/LandingPage/components/Block"
 import { ChartsPage } from "./pages/LandingPage/components/Charts"
 import { ThemesPage } from "./pages/LandingPage/components/Themes"
 import { DocsPage } from "./pages/LandingPage/components/docs"
+import { ThemeProvider } from "./contexts/ThemeContext"
+import { AuthProvider } from "./contexts/AuthContext"
+import { ComponentProvider } from "./contexts/ComponentContext"
+import { ProtectedRoute } from "./components/Roles/ProtectedRoute"
+import { CreateComponentPage } from "./pages/CreateComponentPage"
+import { DeveloperDashboard } from "./pages/DeveloperDashboard"
+import { CoachDashboard } from "./pages/CoachDashboard"
 
 
 const router = createBrowserRouter([
@@ -37,10 +44,43 @@ const router = createBrowserRouter([
         path: "themes",
         element: <ThemesPage />,
       },
+      // Routes protégées pour utilisateurs connectés
+      {
+        path: "create-component",
+        element: (
+          // <ProtectedRoute>
+            <CreateComponentPage />
+          // </ProtectedRoute>
+        ),
+      },
+      {
+        path: "developer-dashboard",
+        element: (
+          // <ProtectedRoute requiredRole="developer">
+            <DeveloperDashboard />
+          // </ProtectedRoute>
+        ),
+      },
+      {
+        path: "coach-dashboard",
+        element: (
+          // <ProtectedRoute requiredRole="coach">
+            <CoachDashboard />
+          // </ProtectedRoute>
+        ),
+      },
     ],
   }
 ])
 
 export default function App() {
-  return <RouterProvider router={router} />
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <ComponentProvider>
+          <RouterProvider router={router} />
+        </ComponentProvider>
+      </AuthProvider>
+    </ThemeProvider>
+  )
 }

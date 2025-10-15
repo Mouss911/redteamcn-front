@@ -81,14 +81,9 @@ export function ComponentsPage() {
     console.log("Next page");
   };
 
-  const handleCreateComponent = () => {
-    console.log("Create new component");
-    // Logique pour créer un composant
-  };
-
   return (
     <div className="space-y-6">
-      {/* Header with Create Button */}
+      {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
           <PageHeader
@@ -101,27 +96,6 @@ export function ComponentsPage() {
             onNext={handleNext}
           />
         </div>
-        <button
-          onClick={handleCreateComponent}
-          className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-6 py-2 whitespace-nowrap"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="mr-2"
-          >
-            <path d="M5 12h14" />
-            <path d="M12 5v14" />
-          </svg>
-          Create Component
-        </button>
       </div>
 
       <ComponentGrid columns={3}>

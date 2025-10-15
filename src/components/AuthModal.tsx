@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
+import { useAuth } from "../contexts/AuthContext";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -8,6 +9,13 @@ interface AuthModalProps {
 
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const { login } = useAuth();
 
   if (!isOpen) return null;
 
@@ -21,10 +29,55 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     // Logique de connexion GitHub
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(isLogin ? "Login" : "Sign up");
-    // Logique de connexion/inscription
+    setIsLoading(true);
+    setError("");
+
+    try {
+      // Validation basique
+      if (!email || !password) {
+        setError("Veuillez remplir tous les champs");
+        setIsLoading(false);
+        return;
+      }
+
+      if (isLogin) {
+        // Connexion
+        const success = await login(email, password);
+        if (success) {
+          onClose();
+        } else {
+          setError("Email ou mot de passe incorrect");
+        }
+      } else {
+        // Inscription (pour la démonstration, on accepte n'importe quelle inscription)
+        if (!name.trim()) {
+          setError("Le nom est requis pour l'inscription");
+          setIsLoading(false);
+          return;
+        }
+
+        // Simulation d'inscription réussie
+        setError("");
+        alert("Inscription réussie! Vous pouvez maintenant vous connecter.");
+        setIsLogin(true);
+        setName("");
+      }
+    } catch {
+      setError("Une erreur est survenue");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    setEmail("");
+    setPassword("");
+    setName("");
+    setError("");
+    setIsLoading(false);
+    onClose();
   };
 
   return (
@@ -32,14 +85,14 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={handleClose}
       />
 
       {/* Modal */}
       <div className="relative z-50 w-full max-w-md rounded-lg border bg-background p-6 shadow-lg">
         {/* Close button */}
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
         >
           <FiX className="h-4 w-4" />
@@ -56,6 +109,20 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               ? "Enter your credentials to sign in to your account"
               : "Enter your information to create your account"}
           </p>
+        </div>
+
+        {/* Error message */}
+        {error && (
+          <div className="mb-4 p-3 rounded-md bg-destructive/10 border border-destructive/20 text-destructive text-sm">
+            {error}
+          </div>
+        )}
+
+        {/* Demo credentials hint */}
+        <div className="mb-4 p-3 rounded-md bg-blue-50 border border-blue-200 text-blue-800 text-sm">
+          <p className="font-medium mb-1">Pour les tests:</p>
+          <p>Email: developer@example.com ou coach@example.com</p>
+          <p>Mot de passe: password</p>
         </div>
 
         {/* Social Login Buttons */}
@@ -114,6 +181,8 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 id="name"
                 type="text"
                 placeholder="John Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
@@ -127,6 +196,8 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               id="email"
               type="email"
               placeholder="m@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
           </div>
@@ -139,15 +210,18 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               id="password"
               type="password"
               placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
           </div>
 
           <button
             type="submit"
-            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-4 py-2 w-full"
+            disabled={isLoading}
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-4 py-2 w-full disabled:opacity-50"
           >
-            {isLogin ? "Sign In" : "Sign Up"}
+            {isLoading ? "Loading..." : (isLogin ? "Sign In" : "Sign Up")}
           </button>
         </form>
 

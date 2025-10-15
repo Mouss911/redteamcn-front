@@ -1,7 +1,7 @@
-export { default as ButtonPrimary } from "./ButtonPrimary";
-export { default as ButtonSecondary } from "./ButtonSecondary";
-export { default as InputText } from "./InputText";
-export { default as CustomOtpInput } from "./CustomOtpInput";
-export { default as CustomPhoneInput } from "./CustomPhoneInput";
+export { Button } from "./button";
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from "./card";
+export { Badge } from "./badge";
+export { Input } from "./input";
+export { Textarea } from "./textarea";
 // export {default as Header} from "./Header";
 // export { default as SideBar } from "./SideBar";
