@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { RootLayout } from "./layouts/root-layout"
-import { HomePage } from "./pages/LandingPage/components/home"
-import { ComponentsPage } from "./pages/LandingPage/components/components"
+
+import { ComponentsPage } from "./pages/LandingPage/components/Components"
 import { BlocksPage } from "./pages/LandingPage/components/Block"
 import { ChartsPage } from "./pages/LandingPage/components/Charts"
 import { ThemesPage } from "./pages/LandingPage/components/Themes"
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomePage />,
+        element: <DocsPage />,
       },
       {
         path: "docs",
@@ -48,25 +48,25 @@ const router = createBrowserRouter([
       {
         path: "create-component",
         element: (
-          // <ProtectedRoute>
+          <ProtectedRoute>
             <CreateComponentPage />
-          // </ProtectedRoute>
+          </ProtectedRoute>
         ),
       },
       {
         path: "developer-dashboard",
         element: (
-          // <ProtectedRoute requiredRole="developer">
+          <ProtectedRoute requiredRole="developer">
             <DeveloperDashboard />
-          // </ProtectedRoute>
+          </ProtectedRoute>
         ),
       },
       {
         path: "coach-dashboard",
         element: (
-          // <ProtectedRoute requiredRole="coach">
+          <ProtectedRoute requiredRole="coach">
             <CoachDashboard />
-          // </ProtectedRoute>
+          </ProtectedRoute>
         ),
       },
     ],

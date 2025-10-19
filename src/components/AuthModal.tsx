@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [error, setError] = useState("");
 
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
@@ -47,6 +49,16 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         const success = await login(email, password);
         if (success) {
           onClose();
+          // Rediriger vers le dashboard approprié selon le rôle après connexion
+          setTimeout(() => {
+            // Récupérer l'utilisateur du contexte pour déterminer le rôle
+            const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+            if (currentUser && currentUser.role === "coach") {
+              navigate("/coach-dashboard");
+            } else if (currentUser && currentUser.role === "developer") {
+              navigate("/developer-dashboard");
+            }
+          }, 100);
         } else {
           setError("Email ou mot de passe incorrect");
         }
