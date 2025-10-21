@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { Button } from "./ui/button";
-import { AuthModal } from "./AuthModal";
+import { Login } from '../pages/Auth/Login';
+import { Register } from '../pages/Auth/Register';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -36,7 +37,8 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const location = useLocation();
   const { isAuthenticated, hasRole, logout, user } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [expandedSections, setExpandedSections] = useState<string[]>(["Navigation", "Components"]);
 
   const handleCreateComponent = () => {
@@ -246,7 +248,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               ) : (
                 <Button
                   onClick={() => {
-                    setIsAuthModalOpen(true);
+                    setIsLoginOpen(true);
                     onClose();
                   }}
                   className="w-full"
@@ -259,10 +261,16 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </div>
       </div>
 
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
+      {/* Login Modal */}
+      <Login
+        isOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+      />
+
+      {/* Register Modal */}
+      <Register
+        isOpen={isRegisterOpen}
+        onClose={() => setIsRegisterOpen(false)}
       />
     </>
   );

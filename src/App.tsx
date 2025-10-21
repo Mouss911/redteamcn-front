@@ -13,6 +13,7 @@ import { ProtectedRoute } from "./components/Roles/ProtectedRoute"
 import { CreateComponentPage } from "./pages/CreateComponentPage"
 import { DeveloperDashboard } from "./pages/DeveloperDashboard"
 import { CoachDashboard } from "./pages/CoachDashboard"
+import { Register } from "./pages/Auth/Register"
 
 
 const router = createBrowserRouter([
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "themes",
         element: <ThemesPage />,
+      },
+      {
+        path: "register",
+        element: <Register isOpen={true} onClose={() => {}} />,
       },
       // Routes protégées pour utilisateurs connectés
       {

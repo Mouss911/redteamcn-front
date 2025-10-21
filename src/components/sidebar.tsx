@@ -122,7 +122,7 @@ export function Sidebar() {
                       
                       return (
                         <Link
-                          key={item.href}
+                          key={`${item.href}-${item.title}`}
                           to={item.href}
                           className={`group flex w-full items-center rounded-md px-2 py-1 hover:underline ${
                             isActive

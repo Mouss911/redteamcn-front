@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { FiSearch, FiMoon, FiSun, FiPlus, FiMenu } from "react-icons/fi";
 import { useState } from "react";
-import { AuthModal } from "./AuthModal";
+import { Login } from '../pages/Auth/Login';
+import { Register } from '../pages/Auth/Register';
 import { MobileMenu } from "./MobileMenu";
 import { useTheme } from "../contexts/ThemeContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -10,7 +11,8 @@ import { Button } from "./ui/button";
 export function Header() {
   const { theme, toggleTheme } = useTheme();
   const { isAuthenticated, hasRole, logout } = useAuth();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleCreateComponent = () => {
@@ -141,7 +143,7 @@ export function Header() {
               </Button>
             ) : (
               <button
-                onClick={() => setIsAuthModalOpen(true)}
+                onClick={() => setIsLoginOpen(true)}
                 className="hidden lg:inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
               >
                 Login
@@ -157,10 +159,16 @@ export function Header() {
         onClose={() => setIsMobileMenuOpen(false)}
       />
 
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
+      {/* Login Modal */}
+      <Login
+        isOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+      />
+
+      {/* Register Modal */}
+      <Register
+        isOpen={isRegisterOpen}
+        onClose={() => setIsRegisterOpen(false)}
       />
     </>
   );
